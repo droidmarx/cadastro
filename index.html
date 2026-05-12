@@ -33,43 +33,30 @@
       padding: 20px 15px;
     }
 
-    .particles {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      overflow: hidden;
-    }
+    .particles { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+    .particles span { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #00d9ff; opacity: .5; animation: float 12s linear infinite; }
+    @keyframes float { 0% { transform: translateY(100vh) scale(0); } 100% { transform: translateY(-10vh) scale(1); } }
 
-    .particles span {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: #00d9ff;
-      opacity: .5;
-      animation: float 12s linear infinite;
-    }
+    .container { width: 100%; max-width: 1200px; margin: auto; }
 
-    @keyframes float {
-      0% { transform: translateY(100vh) scale(0); }
-      100% { transform: translateY(-10vh) scale(1); }
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .top { text-align: center; margin-bottom: 35px; }
+    .top { text-align: center; margin-bottom: 20px; }
     .top i { font-size: 60px; color: #00d9ff; margin-bottom: 15px; animation: pulse 2s infinite; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
     .top h1 { font-size: 34px; margin-bottom: 10px; background: linear-gradient(90deg, #00d9ff, #9b5cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .top p { color: #b6c1ec; font-size: 14px; }
+    .top p { color: #b6c1ec; font-size: 14px; margin-bottom: 15px; }
 
-    /* PLANOS */
-    .planos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
-    .plano-card { position: relative; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; padding: 28px; overflow: hidden; transition: .35s; cursor: pointer; backdrop-filter: blur(18px); box-shadow: 0 0 40px rgba(0, 217, 255, .08); }
+    /* ANIMAÇÃO DE DESLIZE */
+    .scroll-hint { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: rgba(0, 217, 255, 0.08); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 999px; color: #00d9ff; font-size: 13px; font-weight: 500; margin-bottom: 15px; transition: opacity 0.4s ease; animation: floatHorizontal 2s infinite ease-in-out; }
+    .scroll-hint i { font-size: 15px; }
+    @keyframes floatHorizontal { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(12px); } }
+
+    /* PLANOS - CARROSSEL LATERAL */
+    .planos-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+    .planos-grid { display: flex; gap: 25px; overflow-x: auto; padding: 15px 10px 35px 10px; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+    .planos-grid::-webkit-scrollbar { height: 8px; }
+    .planos-grid::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+    .planos-grid::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #00d9ff, #7b2cff); border-radius: 10px; }
+    .plano-card { flex: 0 0 auto; width: 310px; scroll-snap-align: start; position: relative; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; padding: 28px; overflow: hidden; transition: .35s; cursor: pointer; backdrop-filter: blur(18px); box-shadow: 0 0 40px rgba(0, 217, 255, .08); }
     .plano-card:hover { transform: translateY(-8px); border-color: #00d9ff; box-shadow: 0 0 35px rgba(0, 217, 255, .20); }
     .wifi-tag { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #00d9ff, #7b2cff); padding: 7px 14px; border-radius: 999px; font-size: 12px; margin-bottom: 18px; font-weight: 600; }
     .plano-card h2 { font-size: 27px; margin-bottom: 10px; }
@@ -82,6 +69,31 @@
     .preco { font-size: 36px; font-weight: 700; color: #00ffcc; margin-bottom: 18px; }
     .btn-plano { width: 100%; border: none; background: linear-gradient(90deg, #00d9ff, #7b2cff); color: #fff; padding: 16px; border-radius: 18px; font-size: 15px; font-weight: 600; cursor: pointer; transition: .3s; }
     .btn-plano:hover { transform: scale(1.02); }
+
+    /* BANNER SMART WI-FI (ADICIONAL) COM EXPANSÃO */
+    .smart-wifi-wrapper { background: linear-gradient(135deg, rgba(123, 44, 255, 0.15), rgba(0, 217, 255, 0.1)); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 24px; margin-bottom: 35px; box-shadow: 0 0 30px rgba(123, 44, 255, 0.1); backdrop-filter: blur(10px); overflow: hidden; transition: all 0.4s ease; }
+    .smart-wifi-banner { display: flex; align-items: center; gap: 20px; padding: 25px; }
+    .sw-icon { width: 70px; height: 70px; flex-shrink: 0; background: linear-gradient(90deg, #00d9ff, #7b2cff); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 20px rgba(0, 217, 255, 0.4); }
+    .sw-text h3 { font-size: 22px; margin-bottom: 5px; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .sw-text h3 span { font-size: 10px; background: #00ffcc; color: #000; padding: 3px 8px; border-radius: 999px; font-weight: 700; text-transform: uppercase; }
+    
+    /* Botão de Info 'i' */
+    .sw-info-btn { color: #00d9ff; font-size: 20px; cursor: pointer; transition: 0.3s; margin-left: 5px; }
+    .sw-info-btn:hover { color: #00ffcc; transform: scale(1.15) rotate(10deg); text-shadow: 0 0 10px #00ffcc; }
+    
+    .sw-text p { color: #b8c6ef; font-size: 14px; margin-bottom: 10px; line-height: 1.5; }
+    .sw-text .sw-price { font-weight: 600; color: #00ffcc; font-size: 16px; display: block; margin-bottom: 5px; }
+
+    /* Conteúdo Expandido */
+    .sw-expanded { max-height: 0; opacity: 0; transition: all 0.4s ease-in-out; }
+    .sw-expanded.active { max-height: 500px; opacity: 1; }
+    .sw-expanded-content { padding: 0 25px 25px 25px; border-top: 1px dashed rgba(0, 217, 255, 0.2); margin-top: -5px; padding-top: 20px; }
+    .sw-expanded-content h4 { color: #00ffcc; font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .sw-expanded-content p { font-size: 13px; color: #dfe6ff; line-height: 1.6; margin-bottom: 10px; }
+    .sw-expanded-content ul { list-style: none; margin-bottom: 10px; padding-left: 5px; }
+    .sw-expanded-content ul li { font-size: 13px; color: #dfe6ff; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .sw-expanded-content ul li i { color: #00ffcc; font-size: 12px; }
+    .sw-obs { font-size: 11px; color: #98a6cf; display: block; }
 
     /* MODAL FORMULÁRIO */
     .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, .75); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; padding: 20px; z-index: 9999; }
@@ -100,63 +112,34 @@
     .input-box { position: relative; }
     .left-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #00d9ff; font-size: 15px; }
     .input-box input, .input-box select { width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #fff; outline: none; padding: 15px 50px 15px 48px; border-radius: 16px; transition: .3s; font-size: 14px; appearance: none; }
-    
-    select {
-      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300d9ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
-      background-repeat: no-repeat, repeat; background-position: right 1.5rem top 50%, 0 0; background-size: .65em auto, 100%;
-    }
-    
+    select { background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300d9ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat, repeat; background-position: right 1.5rem top 50%, 0 0; background-size: .65em auto, 100%; }
     .input-box input:disabled { opacity: 0.5; cursor: not-allowed; }
     .input-box input:focus, .input-box select:focus { border-color: #00d9ff; box-shadow: 0 0 25px rgba(0, 217, 255, .20); }
     .input-box input::placeholder { color: #b6c1ec; }
     select option { background: #0d1128; }
 
-    /* AUTOCOMPLETE CUSTOMIZADO (COR SÓLIDA) */
-    .caixa-pesquisa {
-      position: fixed;
-      top: 15%; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 450px;
-      max-height: 35vh; 
-      background: #0b0f22; /* COR 100% SÓLIDA (Sem transparência) */
-      border: 1px solid #00d9ff;
-      border-radius: 16px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 217, 255, 0.4);
-      z-index: 100000;
-      overflow-y: auto;
-      display: none; 
-      flex-direction: column;
-    }
-    .caixa-pesquisa-header {
-      padding: 10px 15px;
-      background: #0a192f; /* Cabeçalho Sólido */
-      font-size: 12px;
-      color: #00d9ff;
-      text-align: center;
-      border-bottom: 1px solid rgba(0, 217, 255, 0.2);
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-    }
-    .caixa-pesquisa ul { list-style: none; padding: 0; margin: 0; }
-    .caixa-pesquisa li {
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      background: #0b0f22; /* Fundo dos itens Sólido */
-      color: #fff;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .caixa-pesquisa li:hover { 
-      background: #003a52; /* Cor sólida ao passar o mouse */
-      color: #00d9ff; 
-      padding-left: 25px; 
-    }
+    /* TOGGLE SMART WI-FI NO FORM */
+    .smart-wifi-toggle-box { background: rgba(123, 44, 255, 0.1); border: 1px solid rgba(123, 44, 255, 0.3); padding: 18px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.3s; }
+    .smart-wifi-toggle-box:hover { border-color: #00d9ff; background: rgba(0, 217, 255, 0.05); }
+    .toggle-text h4 { font-size: 15px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .toggle-text h4 i { color: #00ffcc; }
+    .toggle-text p { font-size: 12px; color: #b8c6ef; margin-top: 4px; }
+    
+    .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(255,255,255,0.1); border-radius: 34px; transition: .4s; border: 1px solid rgba(255,255,255,0.2); }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px; background-color: #fff; border-radius: 50%; transition: .4s; }
+    input:checked + .slider { background-color: #00ffcc; border-color: #00ffcc; box-shadow: 0 0 15px rgba(0, 255, 204, 0.5); }
+    input:checked + .slider:before { transform: translateX(22px); background-color: #000; }
 
-    /* STATUS CPF E SENHA */
+    /* AUTOCOMPLETE */
+    .caixa-pesquisa { position: fixed; top: 15%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; max-height: 35vh; background: #0b0f22; border: 1px solid #00d9ff; border-radius: 16px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 217, 255, 0.4); z-index: 100000; overflow-y: auto; display: none; flex-direction: column; }
+    .caixa-pesquisa-header { padding: 10px 15px; background: #0a192f; font-size: 12px; color: #00d9ff; text-align: center; border-bottom: 1px solid rgba(0, 217, 255, 0.2); font-weight: 600; position: sticky; top: 0; }
+    .caixa-pesquisa ul { list-style: none; padding: 0; margin: 0; }
+    .caixa-pesquisa li { padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: #0b0f22; color: #fff; font-size: 14px; cursor: pointer; transition: 0.2s; }
+    .caixa-pesquisa li:hover { background: #003a52; color: #00d9ff; padding-left: 25px; }
+
+    /* STATUS E BOTOES */
     .status-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0; transition: .3s; font-size: 18px; }
     .status-success { opacity: 1; color: #00ff99; animation: pop .4s ease; }
     .status-error { opacity: 1; color: #ff4d5d; animation: shake .4s ease; }
@@ -164,17 +147,14 @@
     @keyframes shake { 0%, 100% { transform: translateY(-50%) translateX(0); } 25%, 75% { transform: translateY(-50%) translateX(-5px); } 50% { transform: translateY(-50%) translateX(5px); } }
     .cpf-valid { border-color: #00ff99 !important; box-shadow: 0 0 20px rgba(0, 255, 153, .18) !important; }
     .cpf-invalid { border-color: #ff4d5d !important; box-shadow: 0 0 20px rgba(255, 77, 93, .15) !important; }
-
     .senha-wrapper { position: relative; }
     .contador-senha { position: absolute; right: 52px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #a7b4de; background: rgba(255, 255, 255, .05); padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .08); }
     .senha-status { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 16px; }
     .senha-ok { color: #00ff99; }
     .senha-erro { color: #ff4d5d; }
-
-    /* BOTOES */
     .btn { grid-column: 1 / -1; border: none; background: linear-gradient(90deg, #00d9ff, #7b2cff); color: #fff; padding: 18px; border-radius: 18px; font-size: 16px; font-weight: 600; cursor: pointer; transition: .35s; margin-top: 10px; box-shadow: 0 10px 35px rgba(0, 217, 255, .20); }
     .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 45px rgba(0, 217, 255, .35); }
-    .footer { text-align: center; margin-top: 35px; color: #95a1c7; font-size: 13px; }
+    .footer { text-align: center; color: #95a1c7; font-size: 13px; margin-bottom: 20px;}
 
     /* MODAL TECNOLOGICO SUCESSO */
     .success-modal { position: fixed; inset: 0; background: radial-gradient(circle at center, #00d9ff22, transparent 30%), rgba(2, 6, 23, .94); backdrop-filter: blur(18px); z-index: 999999; display: none; align-items: center; justify-content: center; overflow: hidden; }
@@ -202,7 +182,10 @@
     @keyframes popUpZap { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
     @media(max-width:768px) {
-      .planos-grid { grid-template-columns: 1fr; }
+      .plano-card { width: 85vw; scroll-snap-align: center; }
+      .smart-wifi-banner { flex-direction: column; text-align: center; padding: 25px 15px; }
+      .sw-text h3 { justify-content: center; }
+      .sw-expanded-content { text-align: left; }
       form { grid-template-columns: 1fr; }
       .modal-box { padding: 24px; }
       .top h1 { font-size: 28px; }
@@ -217,7 +200,6 @@
 
 <body>
 
-  <!-- ELEMENTO FLUTUANTE DE PESQUISA (Cor Sólida) -->
   <div class="caixa-pesquisa" id="caixaPesquisa">
     <div class="caixa-pesquisa-header" id="caixaPesquisaTitulo">Selecione uma opção</div>
     <ul id="listaPesquisa"></ul>
@@ -238,61 +220,98 @@
       <i class="fa-solid fa-wifi"></i>
       <h1>Escolha seu plano</h1>
       <p>Selecione abaixo o melhor plano para iniciar seu cadastro</p>
+      
+      <!-- AVISO ANIMADO DE ROLAGEM -->
+      <div class="scroll-hint" id="scrollHint">
+        Deslize para ver mais planos <i class="fa-solid fa-arrow-right-long"></i>
+      </div>
     </div>
 
     <!-- PLANOS -->
-    <div class="planos-grid">
-      <div class="plano-card">
-        <div class="wifi-tag"><i class="fa-solid fa-wifi"></i> Fibra Óptica</div>
-        <h2>300 Megas</h2>
-        <p>Internet fibra óptica estável e rápida para o dia a dia.</p>
-        <div class="beneficios">
-          <div><i class="fa-solid fa-circle-check"></i> Sem limite de dados</div>
-          <div><i class="fa-solid fa-circle-check"></i> Streaming e navegação</div>
-          <div><i class="fa-solid fa-circle-check"></i> Instalação rápida</div>
+    <div class="planos-wrapper">
+      <div class="planos-grid" id="planosGrid">
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-wifi"></i> Fibra Óptica</div>
+          <h2>300 Megas</h2>
+          <p>Internet fibra óptica estável e rápida para o dia a dia.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Sem limite de dados</div>
+            <div><i class="fa-solid fa-circle-check"></i> Streaming e navegação</div>
+            <div><i class="fa-solid fa-circle-check"></i> Instalação rápida</div>
+          </div>
+          <div class="preco">R$ 99,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('300 Megas - R$ 99,90')">Escolher plano</button>
         </div>
-        <div class="preco">R$ 99,90</div>
-        <button class="btn-plano" onclick="abrirFormulario('300 Megas - R$ 99,90')">Escolher plano</button>
+
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-wifi"></i> Wi-Fi 2.4 + 5GHz</div>
+          <h2>Giga Play</h2>
+          <p>Mais velocidade e estabilidade para múltiplos dispositivos.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Até 500 Megas no Wi-Fi</div>
+            <div><i class="fa-solid fa-circle-check"></i> Streaming 4K</div>
+            <div><i class="fa-solid fa-circle-check"></i> Melhor alcance</div>
+          </div>
+          <div class="preco">R$ 109,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('Giga Play - R$ 109,90')">Escolher plano</button>
+        </div>
+
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-bolt"></i> Wi-Fi 6</div>
+          <h2>Giga Plus</h2>
+          <p>Mais desempenho para gamers, streaming e casas inteligentes.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Até 900 Megas no Wi-Fi</div>
+            <div><i class="fa-solid fa-circle-check"></i> Menor latência</div>
+            <div><i class="fa-solid fa-circle-check"></i> Alta performance</div>
+          </div>
+          <div class="preco">R$ 129,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('Giga Plus - R$ 129,90')">Escolher plano</button>
+        </div>
+
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-rocket"></i> NOVA GERAÇÃO • Wi-Fi 7</div>
+          <h2>Indaia Giga Max</h2>
+          <p>Máxima velocidade e tecnologia Wi-Fi 7.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Wi-Fi 7</div>
+            <div><i class="fa-solid fa-circle-check"></i> Sem limite de dados</div>
+            <div><i class="fa-solid fa-circle-check"></i> Porta aberta</div>
+          </div>
+          <div class="de">De: <s>R$ 239,90</s></div>
+          <div class="preco">R$ 139,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('Indaia Giga Max Wi-Fi 7 - R$ 139,90')">Escolher plano</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER DE DESTAQUE DO SMART WI-FI -->
+    <div class="smart-wifi-wrapper">
+      <div class="smart-wifi-banner">
+        <div class="sw-icon"><i class="fa-solid fa-network-wired"></i></div>
+        <div class="sw-text">
+          <h3>
+            Smart Wi-Fi <span>Adicional</span>
+            <i class="fa-solid fa-circle-info sw-info-btn" onclick="toggleSmartWifiInfo()" title="Clique para saber como funciona"></i>
+          </h3>
+          <p>Segundo ponto de rede ideal para casas grandes, com muitas paredes ou andares.</p>
+          <span class="sw-price">+ R$ 35,00 mensais em qualquer plano</span>
+        </div>
       </div>
 
-      <div class="plano-card">
-        <div class="wifi-tag"><i class="fa-solid fa-wifi"></i> Wi-Fi 2.4 + 5GHz</div>
-        <h2>Giga Play</h2>
-        <p>Mais velocidade e estabilidade para múltiplos dispositivos.</p>
-        <div class="beneficios">
-          <div><i class="fa-solid fa-circle-check"></i> Até 500 Megas no Wi-Fi</div>
-          <div><i class="fa-solid fa-circle-check"></i> Streaming 4K</div>
-          <div><i class="fa-solid fa-circle-check"></i> Melhor alcance</div>
+      <!-- INFORMAÇÕES EXPANSÍVEIS (Escondidas inicialmente) -->
+      <div class="sw-expanded" id="swExpandedInfo">
+        <div class="sw-expanded-content">
+          <h4><i class="fa-solid fa-lightbulb" style="color:#00ffcc;"></i> Como funciona?</h4>
+          <p>Instalamos um <strong>segundo roteador</strong> em um ponto estratégico da sua casa. Ele se comunica de forma transparente com o roteador principal, expandindo o sinal com força total para áreas onde o Wi-Fi normal não chega.</p>
+          <p><strong>Benefícios:</strong></p>
+          <ul>
+            <li><i class="fa-solid fa-check"></i> Elimina de vez as "áreas de sombra" na residência.</li>
+            <li><i class="fa-solid fa-check"></i> Sem quedas ou travamentos ao caminhar pela casa (Rede Única).</li>
+            <li><i class="fa-solid fa-check"></i> Perfeito para sobrados, áreas gourmet ou quartos nos fundos.</li>
+          </ul>
+          <span class="sw-obs">* A instalação desse segundo equipamento depende da avaliação de viabilidade técnica no local pelo nosso técnico.</span>
         </div>
-        <div class="preco">R$ 109,90</div>
-        <button class="btn-plano" onclick="abrirFormulario('Giga Play - R$ 109,90')">Escolher plano</button>
-      </div>
-
-      <div class="plano-card">
-        <div class="wifi-tag"><i class="fa-solid fa-bolt"></i> Wi-Fi 6</div>
-        <h2>Giga Plus</h2>
-        <p>Mais desempenho para gamers, streaming e casas inteligentes.</p>
-        <div class="beneficios">
-          <div><i class="fa-solid fa-circle-check"></i> Até 900 Megas no Wi-Fi</div>
-          <div><i class="fa-solid fa-circle-check"></i> Menor latência</div>
-          <div><i class="fa-solid fa-circle-check"></i> Alta performance</div>
-        </div>
-        <div class="preco">R$ 129,90</div>
-        <button class="btn-plano" onclick="abrirFormulario('Giga Plus - R$ 129,90')">Escolher plano</button>
-      </div>
-
-      <div class="plano-card">
-        <div class="wifi-tag"><i class="fa-solid fa-rocket"></i> NOVA GERAÇÃO • Wi-Fi 7</div>
-        <h2>Indaia Giga Max</h2>
-        <p>Máxima velocidade e tecnologia Wi-Fi 7.</p>
-        <div class="beneficios">
-          <div><i class="fa-solid fa-circle-check"></i> Wi-Fi 7</div>
-          <div><i class="fa-solid fa-circle-check"></i> Sem limite de dados</div>
-          <div><i class="fa-solid fa-circle-check"></i> Porta aberta</div>
-        </div>
-        <div class="de">De: <s>R$ 239,90</s></div>
-        <div class="preco">R$ 139,90</div>
-        <button class="btn-plano" onclick="abrirFormulario('Indaia Giga Max Wi-Fi 7 - R$ 139,90')">Escolher plano</button>
       </div>
     </div>
 
@@ -315,6 +334,18 @@
           <i class="fa-solid fa-bolt left-icon"></i>
           <input type="text" id="planoSelecionadoInput" readonly>
         </div>
+
+        <!-- TOGGLE DO SMART WI-FI DENTRO DO FORMULÁRIO -->
+        <label class="smart-wifi-toggle-box full" for="toggleSmartWifi">
+          <div class="toggle-text">
+            <h4><i class="fa-solid fa-network-wired"></i> Adicionar Smart Wi-Fi?</h4>
+            <p>Incluir segundo ponto por + R$ 35,00/mês</p>
+          </div>
+          <div class="switch">
+            <input type="checkbox" id="toggleSmartWifi" onchange="atualizarPlanoComSmartWifi()">
+            <span class="slider"></span>
+          </div>
+        </label>
 
         <div class="input-box">
           <i class="fa-solid fa-location-dot left-icon"></i>
@@ -351,10 +382,8 @@
           <input type="text" id="nascimento" placeholder="Data de nascimento">
         </div>
 
-        <!-- NATURALIDADE E CIDADE (COM AUTOCOMPLETE FLUTUANTE JS) -->
         <div class="input-box">
           <i class="fa-solid fa-map left-icon"></i>
-          <!-- Removido o datalist, deixamos autocomplete nativo off -->
           <input type="text" id="naturalidadeEstado" placeholder="Estado de Nascimento" autocomplete="off">
         </div>
         <div class="input-box">
@@ -444,11 +473,32 @@
   </div>
 
   <script>
-    let planoSelecionado = "";
+    let planoBaseEscolhido = ""; 
     let linkWhatsAppGlobal = "";
 
     // ==========================================
-    // SISTEMA DE AUTOCOMPLETE CUSTOMIZADO (LIVRE DO TECLADO)
+    // LÓGICA DO ÍCONE DE INFORMAÇÃO DO SMART WI-FI
+    // ==========================================
+    function toggleSmartWifiInfo() {
+      const infoBox = document.getElementById("swExpandedInfo");
+      infoBox.classList.toggle("active");
+    }
+
+    // ==========================================
+    // LÓGICA DO AVISO DE ROLAGEM
+    // ==========================================
+    const planosGrid = document.getElementById("planosGrid");
+    const scrollHint = document.getElementById("scrollHint");
+
+    planosGrid.addEventListener('scroll', function() {
+      if(scrollHint) {
+        scrollHint.style.opacity = '0'; 
+        setTimeout(() => scrollHint.remove(), 400); 
+      }
+    }, { once: true });
+
+    // ==========================================
+    // SISTEMA DE AUTOCOMPLETE CUSTOMIZADO
     // ==========================================
     const inputEstado = document.getElementById("naturalidadeEstado");
     const inputCidade = document.getElementById("naturalidadeCidade");
@@ -458,19 +508,17 @@
 
     let arrayEstados = [];
     let arrayCidades = [];
-    let inputFocado = null; // Para saber quem acionou a lista flutuante
+    let inputFocado = null; 
 
-    // 1. Busca os estados da API na inicialização
     async function carregarEstados() {
       try {
         const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
         const estados = await response.json();
         arrayEstados = estados.map(e => `${e.sigla} - ${e.nome}`);
-      } catch (error) { console.error("Erro ao carregar estados", error); }
+      } catch (error) {}
     }
     carregarEstados();
 
-    // 2. Busca cidades quando um estado é selecionado
     async function buscarCidadesDoEstado(valorEstado) {
       inputCidade.disabled = true;
       inputCidade.value = '';
@@ -492,13 +540,11 @@
       }
     }
 
-    // 3. Renderiza a lista suspensa filtrando conforme digitado
     function exibirCaixaPesquisa(dados, termoPesquisa, inputOrigem, titulo) {
       inputFocado = inputOrigem;
       listaPesquisa.innerHTML = "";
       caixaPesquisaTitulo.innerText = titulo;
 
-      // Filtra os dados ignorando maiúsculas/minúsculas e acentos
       const termoTratado = termoPesquisa.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
       
       const dadosFiltrados = dados.filter(item => {
@@ -512,13 +558,11 @@
         dadosFiltrados.forEach(item => {
           const li = document.createElement("li");
           li.innerText = item;
-          // Ao clicar em uma opção da lista flutuante
           li.addEventListener("mousedown", function(e) {
-            e.preventDefault(); // Evita que o campo perca o foco antes de registrar o click
+            e.preventDefault(); 
             inputOrigem.value = item;
             caixaPesquisa.style.display = "none";
             
-            // Se foi o estado que selecionou, já engatilha as cidades
             if(inputOrigem === inputEstado) {
               buscarCidadesDoEstado(item);
             }
@@ -526,50 +570,48 @@
           listaPesquisa.appendChild(li);
         });
       }
-      
       caixaPesquisa.style.display = "flex";
     }
 
-    // 4. Eventos do Input de ESTADO
-    inputEstado.addEventListener("focus", function() {
-      exibirCaixaPesquisa(arrayEstados, this.value, this, "Selecione o Estado");
-    });
-    inputEstado.addEventListener("input", function() {
-      exibirCaixaPesquisa(arrayEstados, this.value, this, "Selecione o Estado");
-    });
-    inputEstado.addEventListener("blur", function() {
-      setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150);
-    });
+    inputEstado.addEventListener("focus", function() { exibirCaixaPesquisa(arrayEstados, this.value, this, "Selecione o Estado"); });
+    inputEstado.addEventListener("input", function() { exibirCaixaPesquisa(arrayEstados, this.value, this, "Selecione o Estado"); });
+    inputEstado.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
 
-    // 5. Eventos do Input de CIDADE
-    inputCidade.addEventListener("focus", function() {
-      if(arrayCidades.length > 0) exibirCaixaPesquisa(arrayCidades, this.value, this, "Selecione a Cidade");
-    });
-    inputCidade.addEventListener("input", function() {
-      if(arrayCidades.length > 0) exibirCaixaPesquisa(arrayCidades, this.value, this, "Selecione a Cidade");
-    });
-    inputCidade.addEventListener("blur", function() {
-      setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150);
-    });
-
+    inputCidade.addEventListener("focus", function() { if(arrayCidades.length > 0) exibirCaixaPesquisa(arrayCidades, this.value, this, "Selecione a Cidade"); });
+    inputCidade.addEventListener("input", function() { if(arrayCidades.length > 0) exibirCaixaPesquisa(arrayCidades, this.value, this, "Selecione a Cidade"); });
+    inputCidade.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
 
     // ==========================================
-    // ABRIR/FECHAR MODAL
+    // MODAL E LOGICA DO SMART WI-FI NO FORMULÁRIO
     // ==========================================
     function abrirFormulario(plano) {
-      planoSelecionado = plano;
+      planoBaseEscolhido = plano;
+      document.getElementById("toggleSmartWifi").checked = false;
+      atualizarPlanoComSmartWifi();
       document.getElementById("modalFormulario").classList.add("active");
-      document.getElementById("planoEscolhidoTexto").innerHTML = `Plano selecionado: <strong>${plano}</strong>`;
-      document.getElementById("planoSelecionadoInput").value = plano;
+    }
+
+    function atualizarPlanoComSmartWifi() {
+      const toggle = document.getElementById("toggleSmartWifi");
+      const inputPlano = document.getElementById("planoSelecionadoInput");
+      const textoPlano = document.getElementById("planoEscolhidoTexto");
+
+      if(toggle.checked) {
+        inputPlano.value = `${planoBaseEscolhido} + Smart Wi-Fi (R$ 35,00)`;
+        textoPlano.innerHTML = `Plano selecionado: <strong>${planoBaseEscolhido} com Smart Wi-Fi</strong>`;
+      } else {
+        inputPlano.value = planoBaseEscolhido;
+        textoPlano.innerHTML = `Plano selecionado: <strong>${planoBaseEscolhido}</strong>`;
+      }
     }
 
     function fecharFormulario() {
       document.getElementById("modalFormulario").classList.remove("active");
-      caixaPesquisa.style.display = "none"; // Garante que a caixa fecha
+      caixaPesquisa.style.display = "none"; 
     }
 
     // ==========================================
-    // MÁSCARAS E VALIDAÇÕES (CEP, CPF, RG, etc)
+    // MÁSCARAS
     // ==========================================
     cep.addEventListener("input", function () {
       let value = this.value.replace(/\D/g, '');
@@ -594,7 +636,6 @@
       value = value.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
       value = value.replace(/\.(\d{3})(\d)/, ".$1-$2");
       this.value = value.substring(0, 14);
-
       this.classList.remove("cpf-valid"); this.classList.remove("cpf-invalid");
       cpfStatus.className = "status-icon";
     });
@@ -672,7 +713,7 @@
     });
 
     // ==========================================
-    // ANIMAÇÃO E ENVIO (WHATSAPP)
+    // ANIMAÇÃO WHATSAPP E ENVIO FINAL
     // ==========================================
     function iniciarAnimacaoTecnologica() {
       const modal = document.getElementById("successModal");
@@ -699,11 +740,13 @@
       if (!validarCPF(cpf.value)) { alert("CPF inválido."); cpf.focus(); return; }
       if (senhaWifi.value.length < 8) { alert("A senha deve ter mín 8 caracteres."); senhaWifi.focus(); return; }
 
+      const planoFinalText = document.getElementById("planoSelecionadoInput").value;
+
       const dados = `
 📡 *NOVO CADASTRO DE INSTALAÇÃO*
 
 🔥 *PLANO ESCOLHIDO*
-${planoSelecionado}
+${planoFinalText}
 
 📍 *ENDEREÇO*
 CEP: ${cep.value}
