@@ -1,33 +1,834 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cadastro de Instalação</title>
+
+  <!-- GOOGLE FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, #00c3ff22, transparent 30%),
+        radial-gradient(circle at bottom right, #7b2cff33, transparent 30%),
+        #050816;
+      color: #fff;
+      overflow-x: hidden;
+      padding: 20px 15px;
+    }
+
+    .particles { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+    .particles span { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #00d9ff; opacity: .5; animation: float 12s linear infinite; }
+    @keyframes float { 0% { transform: translateY(100vh) scale(0); } 100% { transform: translateY(-10vh) scale(1); } }
+
+    .container { width: 100%; max-width: 1200px; margin: auto; }
+
+    .top { text-align: center; margin-bottom: 20px; }
+    .top i { font-size: 60px; color: #00d9ff; margin-bottom: 15px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .top h1 { font-size: 34px; margin-bottom: 10px; background: linear-gradient(90deg, #00d9ff, #9b5cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .top p { color: #b6c1ec; font-size: 14px; margin-bottom: 15px; }
+
+    /* ANIMAÇÃO DE DESLIZE */
+    .scroll-hint { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: rgba(0, 217, 255, 0.08); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 999px; color: #00d9ff; font-size: 13px; font-weight: 500; margin-bottom: 15px; transition: opacity 0.4s ease; animation: floatHorizontal 2s infinite ease-in-out; }
+    .scroll-hint i { font-size: 15px; }
+    @keyframes floatHorizontal { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(12px); } }
+
+    /* PLANOS - CARROSSEL LATERAL */
+    .planos-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+    .planos-grid { display: flex; gap: 25px; overflow-x: auto; padding: 15px 10px 35px 10px; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+    .planos-grid::-webkit-scrollbar { height: 8px; }
+    .planos-grid::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+    .planos-grid::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #00d9ff, #7b2cff); border-radius: 10px; }
+    
+    .plano-card { flex: 0 0 auto; width: 310px; scroll-snap-align: start; position: relative; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; padding: 28px; transition: .35s; cursor: pointer; backdrop-filter: blur(18px); box-shadow: 0 0 40px rgba(0, 217, 255, .08); }
+    .plano-card:hover { transform: translateY(-8px); border-color: #00d9ff; box-shadow: 0 0 35px rgba(0, 217, 255, .20); }
+    
+    .wifi-tag { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #00d9ff, #7b2cff); padding: 7px 14px; border-radius: 999px; font-size: 12px; margin-bottom: 18px; font-weight: 600; }
+    .plano-card h2 { font-size: 27px; margin-bottom: 10px; }
+    .plano-card p { color: #b8c6ef; font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+    
+    .beneficios { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+    .beneficios div { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #dfe6ff; }
+    .beneficios i { color: #00ffb3; }
+    .de { font-size: 13px; color: #98a6cf; margin-bottom: 4px; }
+    .de s { opacity: .7; }
+    .preco { font-size: 36px; font-weight: 700; color: #00ffcc; margin-bottom: 18px; }
+    .btn-plano { width: 100%; border: none; background: linear-gradient(90deg, #00d9ff, #7b2cff); color: #fff; padding: 16px; border-radius: 18px; font-size: 15px; font-weight: 600; cursor: pointer; transition: .3s; }
+    .btn-plano:hover { transform: scale(1.02); }
+
+    /* BALÃO DE INFORMAÇÃO (TOOLTIP) - PORTA ABERTA */
+    .tooltip-container { position: relative; cursor: pointer; display: flex; align-items: center; gap: 10px; outline: none; }
+    .tooltip-container i { color: #00ffb3; }
+    .tooltip-container .info-icon { color: #00d9ff; font-size: 15px; margin-left: -5px; transition: .3s; }
+    .tooltip-container:hover .info-icon { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
+    
+    .tooltip-box { visibility: hidden; opacity: 0; position: absolute; bottom: 140%; left: 50%; transform: translateX(-50%) translateY(10px); width: 250px; background: rgba(11, 15, 34, 0.98); color: #dfe6ff; text-align: center; border-radius: 12px; padding: 14px; font-size: 12px; line-height: 1.5; border: 1px solid rgba(0, 217, 255, 0.4); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); transition: all 0.3s ease; z-index: 100; pointer-events: none; }
+    .tooltip-box::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px; border-width: 6px; border-style: solid; border-color: rgba(0, 217, 255, 0.4) transparent transparent transparent; }
+    .tooltip-container:hover .tooltip-box, .tooltip-container:focus .tooltip-box { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* BANNER SMART WI-FI (ADICIONAL) COM EXPANSÃO */
+    .smart-wifi-wrapper { background: linear-gradient(135deg, rgba(123, 44, 255, 0.15), rgba(0, 217, 255, 0.1)); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 24px; margin-bottom: 35px; box-shadow: 0 0 30px rgba(123, 44, 255, 0.1); backdrop-filter: blur(10px); overflow: hidden; transition: all 0.4s ease; }
+    .smart-wifi-banner { display: flex; align-items: center; gap: 20px; padding: 25px; }
+    .sw-icon { width: 70px; height: 70px; flex-shrink: 0; background: linear-gradient(90deg, #00d9ff, #7b2cff); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 20px rgba(0, 217, 255, 0.4); }
+    .sw-text h3 { font-size: 22px; margin-bottom: 5px; color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .sw-text h3 span { font-size: 10px; background: #00ffcc; color: #000; padding: 3px 8px; border-radius: 999px; font-weight: 700; text-transform: uppercase; }
+    .sw-info-btn { color: #00d9ff; font-size: 20px; cursor: pointer; transition: 0.3s; margin-left: 5px; }
+    .sw-info-btn:hover { color: #00ffcc; transform: scale(1.15) rotate(10deg); text-shadow: 0 0 10px #00ffcc; }
+    .sw-text p { color: #b8c6ef; font-size: 14px; margin-bottom: 10px; line-height: 1.5; }
+    .sw-text .sw-price { font-weight: 600; color: #00ffcc; font-size: 16px; display: block; margin-bottom: 5px; }
+
+    /* Conteúdo Expandido */
+    .sw-expanded { max-height: 0; opacity: 0; transition: all 0.4s ease-in-out; }
+    .sw-expanded.active { max-height: 500px; opacity: 1; }
+    .sw-expanded-content { padding: 0 25px 25px 25px; border-top: 1px dashed rgba(0, 217, 255, 0.2); margin-top: -5px; padding-top: 20px; }
+    .sw-expanded-content h4 { color: #00ffcc; font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .sw-expanded-content p { font-size: 13px; color: #dfe6ff; line-height: 1.6; margin-bottom: 10px; }
+    .sw-expanded-content ul { list-style: none; margin-bottom: 10px; padding-left: 5px; }
+    .sw-expanded-content ul li { font-size: 13px; color: #dfe6ff; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .sw-expanded-content ul li i { color: #00ffcc; font-size: 12px; }
+    .sw-obs { font-size: 11px; color: #98a6cf; display: block; }
+
+    /* MODAL FORMULÁRIO */
+    .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, .75); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; padding: 20px; z-index: 9999; }
+    .modal.active { display: flex; animation: fade .35s ease; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    .modal-box { width: 100%; max-width: 980px; max-height: 95vh; overflow-y: auto; background: rgba(11, 15, 34, 0.95); border: 1px solid rgba(255, 255, 255, .08); border-radius: 30px; padding: 35px; box-shadow: 0 0 60px rgba(0, 217, 255, .18); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+    .modal-header h2 { font-size: 28px; }
+    .modal-header p { color: #9fb0dd; font-size: 13px; margin-top: 5px; }
+    .close-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: rgba(255, 255, 255, .08); color: #fff; font-size: 16px; cursor: pointer; transition: .3s; }
+    .close-btn:hover { background: rgba(255, 255, 255, .14); transform: rotate(90deg); }
+
+    /* FORM */
+    form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .full { grid-column: 1 / -1; }
+    .input-box { position: relative; }
+    .left-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #00d9ff; font-size: 15px; }
+    .input-box input { width: 100%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #fff; outline: none; padding: 15px 50px 15px 48px; border-radius: 16px; transition: .3s; font-size: 14px; appearance: none; }
+    
+    /* SETINHA PARA CAMPOS READONLY (Fingindo ser um select) */
+    .input-box input[readonly]:not(#planoSelecionadoInput) {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300d9ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1.5rem top 50%;
+      background-size: .65em auto;
+    }
+
+    .input-box input:disabled { opacity: 0.5; cursor: not-allowed; }
+    .input-box input:focus { border-color: #00d9ff; box-shadow: 0 0 25px rgba(0, 217, 255, .20); }
+    .input-box input::placeholder { color: #b6c1ec; }
+
+    /* TOGGLE SMART WI-FI NO FORM */
+    .smart-wifi-toggle-box { background: rgba(123, 44, 255, 0.1); border: 1px solid rgba(123, 44, 255, 0.3); padding: 18px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.3s; }
+    .smart-wifi-toggle-box:hover { border-color: #00d9ff; background: rgba(0, 217, 255, 0.05); }
+    .toggle-text h4 { font-size: 15px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .toggle-text h4 i { color: #00ffcc; }
+    .toggle-text p { font-size: 12px; color: #b8c6ef; margin-top: 4px; }
+    
+    .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(255,255,255,0.1); border-radius: 34px; transition: .4s; border: 1px solid rgba(255,255,255,0.2); }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px; background-color: #fff; border-radius: 50%; transition: .4s; }
+    input:checked + .slider { background-color: #00ffcc; border-color: #00ffcc; box-shadow: 0 0 15px rgba(0, 255, 204, 0.5); }
+    input:checked + .slider:before { transform: translateX(22px); background-color: #000; }
+
+    /* AUTOCOMPLETE / DROPDOWNS CUSTOMIZADOS */
+    .caixa-pesquisa { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; max-height: 30vh; background: #0b0f22; border: 1px solid #00d9ff; border-radius: 16px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 217, 255, 0.3); z-index: 100000; overflow-y: auto; display: none; flex-direction: column; }
+    .caixa-pesquisa-header { padding: 10px 15px; background: #0a192f; font-size: 12px; color: #00d9ff; text-align: center; border-bottom: 1px solid rgba(0, 217, 255, 0.2); font-weight: 600; position: sticky; top: 0; }
+    .caixa-pesquisa ul { list-style: none; padding: 0; margin: 0; }
+    .caixa-pesquisa li { padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: #0b0f22; color: #fff; font-size: 14px; cursor: pointer; transition: 0.2s; }
+    .caixa-pesquisa li:hover { background: #003a52; color: #00d9ff; padding-left: 25px; }
+
+    /* STATUS E BOTOES */
+    .status-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); opacity: 0; transition: .3s; font-size: 18px; }
+    .status-success { opacity: 1; color: #00ff99; animation: pop .4s ease; }
+    .status-error { opacity: 1; color: #ff4d5d; animation: shake .4s ease; }
+    @keyframes pop { 0% { transform: translateY(-50%) scale(0); } 70% { transform: translateY(-50%) scale(1.2); } 100% { transform: translateY(-50%) scale(1); } }
+    @keyframes shake { 0%, 100% { transform: translateY(-50%) translateX(0); } 25%, 75% { transform: translateY(-50%) translateX(-5px); } 50% { transform: translateY(-50%) translateX(5px); } }
+    .cpf-valid { border-color: #00ff99 !important; box-shadow: 0 0 20px rgba(0, 255, 153, .18) !important; }
+    .cpf-invalid { border-color: #ff4d5d !important; box-shadow: 0 0 20px rgba(255, 77, 93, .15) !important; }
+    .senha-wrapper { position: relative; }
+    .contador-senha { position: absolute; right: 52px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #a7b4de; background: rgba(255, 255, 255, .05); padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .08); }
+    .senha-status { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+    .senha-ok { color: #00ff99; }
+    .senha-erro { color: #ff4d5d; }
+    .btn { grid-column: 1 / -1; border: none; background: linear-gradient(90deg, #00d9ff, #7b2cff); color: #fff; padding: 18px; border-radius: 18px; font-size: 16px; font-weight: 600; cursor: pointer; transition: .35s; margin-top: 10px; box-shadow: 0 10px 35px rgba(0, 217, 255, .20); }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 15px 45px rgba(0, 217, 255, .35); }
+    .footer { text-align: center; color: #95a1c7; font-size: 13px; margin-bottom: 20px;}
+
+    /* MODAL TECNOLOGICO SUCESSO */
+    .success-modal { position: fixed; inset: 0; background: radial-gradient(circle at center, #00d9ff22, transparent 30%), rgba(2, 6, 23, .94); backdrop-filter: blur(18px); z-index: 999999; display: none; align-items: center; justify-content: center; overflow: hidden; }
+    .success-modal.active { display: flex; animation: fade .6s ease; }
+    .tech-bg { position: absolute; inset: 0; overflow: hidden; }
+    .tech-bg span { position: absolute; width: 2px; height: 120px; background: linear-gradient(to bottom, transparent, #00d9ff, transparent); opacity: .4; animation: matrix 4s linear infinite; }
+    @keyframes matrix { 0% { transform: translateY(-200px); } 100% { transform: translateY(120vh); } }
+    .success-box { position: relative; z-index: 2; width: 95%; max-width: 900px; text-align: center; padding: 40px 20px; }
+    .circle-tech { width: 180px; height: 180px; margin: auto; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 35px; border: 2px solid rgba(0, 217, 255, .5); box-shadow: 0 0 30px rgba(0, 217, 255, .5), inset 0 0 30px rgba(0, 217, 255, .2); animation: rotateTech 8s linear infinite; }
+    .circle-tech::before { content: ''; position: absolute; inset: -18px; border-radius: 50%; border: 2px dashed rgba(123, 44, 255, .5); animation: rotateReverse 12s linear infinite; }
+    .circle-tech i { font-size: 70px; color: #00e5ff; text-shadow: 0 0 25px #00d9ff; }
+    @keyframes rotateTech { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes rotateReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    .typewriter { max-width: 900px; margin: auto; min-height: 160px; }
+    .typewriter h1 { font-size: clamp(30px, 5vw, 62px); line-height: 1.3; font-weight: 700; background: linear-gradient(90deg, #00e5ff, #ffffff, #9b5cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 25px rgba(0, 217, 255, .15); }
+    .cursor { display: inline-block; width: 4px; height: 55px; background: #00d9ff; margin-left: 8px; animation: blink .7s infinite; vertical-align: middle; box-shadow: 0 0 15px #00d9ff; }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    .loading-bar { width: 100%; max-width: 500px; height: 10px; margin: 45px auto 0; background: rgba(255, 255, 255, .08); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255, 255, 255, .08); }
+    .loading-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00d9ff, #7b2cff, #00ffcc); border-radius: 999px; animation: loadbar 5s linear forwards; box-shadow: 0 0 25px rgba(0, 217, 255, .6); }
+    @keyframes loadbar { from { width: 0%; } to { width: 100%; } }
+    .scan-line { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(0, 217, 255, .08), transparent); animation: scan 4s linear infinite; pointer-events: none; }
+    @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+    .btn-final-zap { background: linear-gradient(90deg, #25D366, #128C7E); color: #fff; border: none; padding: 18px 40px; border-radius: 999px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 35px; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3); transition: 0.3s; display: none; align-items: center; justify-content: center; gap: 12px; animation: popUpZap 0.5s ease forwards; }
+    .btn-final-zap:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5); }
+    @keyframes popUpZap { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    @media(max-width:768px) {
+      .plano-card { width: 85vw; scroll-snap-align: center; }
+      .smart-wifi-banner { flex-direction: column; text-align: center; padding: 25px 15px; }
+      .sw-text h3 { justify-content: center; }
+      .sw-expanded-content { text-align: left; }
+      form { grid-template-columns: 1fr; }
+      .modal-box { padding: 24px; }
+      .top h1 { font-size: 28px; }
+      .plano-card h2 { font-size: 24px; }
+      .preco { font-size: 30px; }
+      .typewriter h1 { line-height: 1.5; }
+      .cursor { height: 38px; }
+      .btn-final-zap { font-size: 16px; padding: 15px 30px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ELEMENTO DA CAIXA DE PESQUISA -->
+  <div class="caixa-pesquisa" id="caixaPesquisa">
+    <div class="caixa-pesquisa-header" id="caixaPesquisaTitulo">Selecione uma opção</div>
+    <ul id="listaPesquisa"></ul>
+  </div>
+
+  <div class="particles">
+    <span style="left:10%; animation-duration:8s;"></span>
+    <span style="left:20%; animation-duration:12s;"></span>
+    <span style="left:35%; animation-duration:7s;"></span>
+    <span style="left:50%; animation-duration:15s;"></span>
+    <span style="left:65%; animation-duration:10s;"></span>
+    <span style="left:80%; animation-duration:13s;"></span>
+    <span style="left:90%; animation-duration:9s;"></span>
+  </div>
+
+  <div class="container">
+    <div class="top">
+      <i class="fa-solid fa-wifi"></i>
+      <h1>Escolha seu plano</h1>
+      <p>Selecione abaixo o melhor plano para iniciar seu cadastro</p>
+      
+      <!-- AVISO ANIMADO DE ROLAGEM -->
+      <div class="scroll-hint" id="scrollHint">
+        Deslize para ver mais planos <i class="fa-solid fa-arrow-right-long"></i>
+      </div>
+    </div>
+
+    <!-- PLANOS -->
+    <div class="planos-wrapper">
+      <div class="planos-grid" id="planosGrid">
+        
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-wifi"></i> Fibra Óptica</div>
+          <h2>300 Megas</h2>
+          <p>Internet fibra óptica estável e rápida para o dia a dia.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Sem limite de dados</div>
+            <div><i class="fa-solid fa-circle-check"></i> Streaming e navegação</div>
+            <div><i class="fa-solid fa-circle-check"></i> Instalação rápida</div>
+          </div>
+          <div class="preco">R$ 99,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('300 Megas - R$ 99,90')">Escolher plano</button>
+        </div>
+
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-wifi"></i> Wi-Fi 2.4 + 5GHz</div>
+          <h2>Giga Play</h2>
+          <p>Mais velocidade e estabilidade para múltiplos dispositivos.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Até 500 Megas no Wi-Fi</div>
+            <div><i class="fa-solid fa-circle-check"></i> Streaming 4K</div>
+            <div class="tooltip-container" tabindex="0">
+              <i class="fa-solid fa-circle-check"></i> Porta aberta
+              <i class="fa-solid fa-circle-info info-icon"></i>
+              <div class="tooltip-box">Porta Aberta significa velocidade total liberada, sem limitações de banda. Sua conexão opera na capacidade máxima que seu dispositivo suporta.</div>
+            </div>
+          </div>
+          <div class="preco">R$ 109,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('Giga Play - R$ 109,90')">Escolher plano</button>
+        </div>
+
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-bolt"></i> Wi-Fi 6</div>
+          <h2>Giga Plus</h2>
+          <p>Mais desempenho para gamers, streaming e casas inteligentes.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Até 900 Megas no Wi-Fi</div>
+            <div><i class="fa-solid fa-circle-check"></i> Alta performance</div>
+            <div class="tooltip-container" tabindex="0">
+              <i class="fa-solid fa-circle-check"></i> Porta aberta
+              <i class="fa-solid fa-circle-info info-icon"></i>
+              <div class="tooltip-box">Porta Aberta significa velocidade total liberada, sem limitações de banda. Sua conexão opera na capacidade máxima que seu dispositivo suporta.</div>
+            </div>
+          </div>
+          <div class="preco">R$ 129,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('Giga Plus - R$ 129,90')">Escolher plano</button>
+        </div>
+
+        <div class="plano-card">
+          <div class="wifi-tag"><i class="fa-solid fa-rocket"></i> NOVA GERAÇÃO • Wi-Fi 7</div>
+          <h2>Indaia Giga Max</h2>
+          <p>Máxima velocidade e tecnologia Wi-Fi 7.</p>
+          <div class="beneficios">
+            <div><i class="fa-solid fa-circle-check"></i> Wi-Fi 7</div>
+            <div><i class="fa-solid fa-circle-check"></i> Sem limite de dados</div>
+            <div class="tooltip-container" tabindex="0">
+              <i class="fa-solid fa-circle-check"></i> Porta aberta
+              <i class="fa-solid fa-circle-info info-icon"></i>
+              <div class="tooltip-box">Porta Aberta significa velocidade total liberada, sem limitações de banda. Sua conexão opera na capacidade máxima que seu dispositivo suporta.</div>
+            </div>
+          </div>
+          <div class="de">De: <s>R$ 239,90</s></div>
+          <div class="preco">R$ 139,90</div>
+          <button class="btn-plano" onclick="abrirFormulario('Indaia Giga Max Wi-Fi 7 - R$ 139,90')">Escolher plano</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER DE DESTAQUE DO SMART WI-FI -->
+    <div class="smart-wifi-wrapper">
+      <div class="smart-wifi-banner">
+        <div class="sw-icon"><i class="fa-solid fa-network-wired"></i></div>
+        <div class="sw-text">
+          <h3>
+            Smart Wi-Fi <span>Adicional</span>
+            <i class="fa-solid fa-circle-info sw-info-btn" onclick="toggleSmartWifiInfo()" title="Clique para saber como funciona"></i>
+          </h3>
+          <p>Segundo ponto de rede ideal para casas grandes, com muitas paredes ou andares.</p>
+          <span class="sw-price">+ R$ 35,00 mensais em qualquer plano</span>
+        </div>
+      </div>
+
+      <div class="sw-expanded" id="swExpandedInfo">
+        <div class="sw-expanded-content">
+          <h4><i class="fa-solid fa-lightbulb" style="color:#00ffcc;"></i> Como funciona?</h4>
+          <p>Instalamos um <strong>segundo roteador</strong> em um ponto estratégico da sua casa. Ele se comunica de forma transparente com o roteador principal, expandindo o sinal com força total para áreas onde o Wi-Fi normal não chega.</p>
+          <p><strong>Benefícios:</strong></p>
+          <ul>
+            <li><i class="fa-solid fa-check"></i> Elimina de vez as "áreas de sombra" na residência.</li>
+            <li><i class="fa-solid fa-check"></i> Sem quedas ou travamentos ao caminhar pela casa (Rede Única).</li>
+            <li><i class="fa-solid fa-check"></i> Perfeito para sobrados, áreas gourmet ou quartos nos fundos.</li>
+          </ul>
+          <span class="sw-obs">* A instalação desse segundo equipamento depende da avaliação de viabilidade técnica no local pelo nosso técnico.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Sistema inteligente de cadastro • Powered by GuiMarx®</div>
+  </div>
+
+  <!-- MODAL FORMULÁRIO -->
+  <div class="modal" id="modalFormulario">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h2>Cadastro de instalação</h2>
+          <p id="planoEscolhidoTexto">Plano selecionado</p>
+        </div>
+        <button class="close-btn" type="button" onclick="fecharFormulario()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="cadastroForm">
+        <div class="input-box full">
+          <i class="fa-solid fa-bolt left-icon"></i>
+          <input type="text" id="planoSelecionadoInput" readonly>
+        </div>
+
+        <label class="smart-wifi-toggle-box full" for="toggleSmartWifi">
+          <div class="toggle-text">
+            <h4><i class="fa-solid fa-network-wired"></i> Adicionar Smart Wi-Fi?</h4>
+            <p>Incluir segundo ponto por + R$ 35,00/mês</p>
+          </div>
+          <div class="switch">
+            <input type="checkbox" id="toggleSmartWifi" onchange="atualizarPlanoComSmartWifi()">
+            <span class="slider"></span>
+          </div>
+        </label>
+
+        <div class="input-box">
+          <i class="fa-solid fa-location-dot left-icon"></i>
+          <input type="text" id="cep" placeholder="CEP" maxlength="9">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-road left-icon"></i>
+          <input type="text" id="endereco" placeholder="Endereço">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-house left-icon"></i>
+          <input type="text" id="numero" placeholder="Número">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-building left-icon"></i>
+          <input type="text" id="complemento" placeholder="Complemento">
+        </div>
+
+        <div class="input-box full">
+          <i class="fa-solid fa-user left-icon"></i>
+          <input type="text" id="nome" placeholder="Nome completo">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-id-card left-icon"></i>
+          <input type="text" id="cpf" placeholder="CPF">
+          <div id="cpfStatus" class="status-icon"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-id-badge left-icon"></i>
+          <input type="text" id="rg" placeholder="RG">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-calendar-days left-icon"></i>
+          <input type="text" id="nascimento" placeholder="Data de nascimento">
+        </div>
+
+        <div class="input-box">
+          <i class="fa-solid fa-map left-icon"></i>
+          <input type="text" id="naturalidadeEstado" placeholder="Estado de Nascimento" autocomplete="off">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-city left-icon"></i>
+          <input type="text" id="naturalidadeCidade" placeholder="Selecione o Estado primeiro" autocomplete="off" disabled>
+        </div>
+
+        <div class="input-box">
+          <i class="fa-solid fa-person left-icon"></i>
+          <input type="text" id="nomePai" placeholder="Nome do Pai">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-person-dress left-icon"></i>
+          <input type="text" id="nomeMae" placeholder="Nome da Mãe">
+        </div>
+
+        <div class="input-box">
+          <i class="fa-solid fa-envelope left-icon"></i>
+          <input type="email" id="email" placeholder="Email">
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-phone left-icon"></i>
+          <input type="text" id="telefone" placeholder="Contato">
+        </div>
+
+        <div class="input-box full">
+          <i class="fa-solid fa-ring left-icon"></i>
+          <input type="text" id="estadoCivil" placeholder="Estado Civil" readonly>
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-calendar-check left-icon"></i>
+          <input type="text" id="vencimento" placeholder="Melhor data de Vencimento" readonly>
+        </div>
+        <div class="input-box">
+          <i class="fa-solid fa-clock left-icon"></i>
+          <input type="text" id="periodo" placeholder="Período para instalar" readonly>
+        </div>
+
+        <div class="input-box full">
+          <i class="fa-solid fa-wifi left-icon"></i>
+          <input type="text" id="wifi" placeholder="Nome do Wi-Fi">
+        </div>
+        <div class="input-box full senha-wrapper">
+          <i class="fa-solid fa-lock left-icon"></i>
+          <input type="text" id="senhaWifi" placeholder="Senha do Wi-Fi">
+          <div class="contador-senha" id="contadorSenha">8 mínimos</div>
+          <div class="senha-status" id="senhaStatus"><i class="fa-solid fa-circle-xmark senha-erro"></i></div>
+        </div>
+
+        <button type="submit" class="btn">Iniciar Conexão</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL TECNOLÓGICO DE SUCESSO -->
+  <div class="success-modal" id="successModal">
+    <div class="tech-bg">
+      <span style="left:5%; animation-delay:0s;"></span><span style="left:12%; animation-delay:1s;"></span><span style="left:20%; animation-delay:2s;"></span><span style="left:30%; animation-delay:1.5s;"></span><span style="left:40%; animation-delay:0.5s;"></span><span style="left:50%; animation-delay:2.5s;"></span><span style="left:60%; animation-delay:1s;"></span><span style="left:70%; animation-delay:3s;"></span><span style="left:80%; animation-delay:1.8s;"></span><span style="left:90%; animation-delay:2.2s;"></span>
+    </div>
+    <div class="scan-line"></div>
+    <div class="success-box">
+      <div class="circle-tech"><i class="fa-solid fa-satellite-dish"></i></div>
+      <div class="typewriter">
+        <h1><span id="typedText"></span><span class="cursor"></span></h1>
+      </div>
+      <div class="loading-bar" id="loadingBar"><div class="loading-fill"></div></div>
+      <button class="btn-final-zap" id="btnEnviarWhatsApp" type="button">
+        <i class="fa-brands fa-whatsapp"></i> Finalizar via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let linkWhatsAppGlobal = "";
+    
+    // VARIÁVEIS PARA A LÓGICA DE SOMA DE VALOR DO PLANO + SMART WIFI
+    let nomePlanoBase = "";
+    let precoPlanoBase = 0;
+
+    function toggleSmartWifiInfo() {
+      const infoBox = document.getElementById("swExpandedInfo");
+      infoBox.classList.toggle("active");
+    }
+
+    const planosGrid = document.getElementById("planosGrid");
+    const scrollHint = document.getElementById("scrollHint");
+
+    planosGrid.addEventListener('scroll', function() {
+      if(scrollHint) {
+        scrollHint.style.opacity = '0'; 
+        setTimeout(() => scrollHint.remove(), 400); 
+      }
+    }, { once: true });
+
+    // ==========================================
+    // SISTEMA DE AUTOCOMPLETE E DROPDOWNS
+    // ==========================================
+    const inputEstado = document.getElementById("naturalidadeEstado");
+    const inputCidade = document.getElementById("naturalidadeCidade");
+    const caixaPesquisa = document.getElementById("caixaPesquisa");
+    const listaPesquisa = document.getElementById("listaPesquisa");
+    const caixaPesquisaTitulo = document.getElementById("caixaPesquisaTitulo");
+
+    let arrayEstados = [];
+    let arrayCidades = [];
+    let inputFocado = null; 
+
+    const arrayEstadoCivil = ["Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)"];
+    const arrayVencimento = ["Dia 10", "Dia 15", "Dia 20", "Dia 25"];
+    const arrayPeriodo = ["Manhã", "Tarde"];
+
+    const inputEstadoCivil = document.getElementById("estadoCivil");
+    const inputVencimento = document.getElementById("vencimento");
+    const inputPeriodo = document.getElementById("periodo");
+
+    async function carregarEstados() {
+      try {
+        const response = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
+        const estados = await response.json();
+        arrayEstados = estados.map(e => `${e.sigla} - ${e.nome}`);
+      } catch (error) {}
+    }
+    carregarEstados();
+
+    async function buscarCidadesDoEstado(valorEstado) {
+      inputCidade.disabled = true;
+      inputCidade.value = '';
+      inputCidade.placeholder = 'Carregando cidades...';
+      arrayCidades = [];
+
+      const matchUf = valorEstado.match(/^([A-Za-z]{2})/);
+      if(!matchUf) return;
+      const uf = matchUf[1].toUpperCase();
+
+      try {
+        const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
+        const cidades = await response.json();
+        arrayCidades = cidades.map(c => c.nome);
+        inputCidade.disabled = false;
+        inputCidade.placeholder = 'Cidade de Nascimento';
+      } catch (error) {
+        inputCidade.placeholder = 'Erro ao carregar';
+      }
+    }
+
+    function exibirCaixaPesquisa(dados, termoPesquisa, inputOrigem, titulo) {
+      inputFocado = inputOrigem;
+      inputOrigem.parentNode.appendChild(caixaPesquisa);
+      listaPesquisa.innerHTML = "";
+      caixaPesquisaTitulo.innerText = titulo;
+
+      const termoTratado = termoPesquisa.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      
+      const dadosFiltrados = dados.filter(item => {
+        const itemTratado = item.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        return itemTratado.includes(termoTratado);
+      });
+
+      if(dadosFiltrados.length === 0) {
+        listaPesquisa.innerHTML = `<li style="text-align:center; color:#ff4d5d;">Nenhum resultado encontrado</li>`;
+      } else {
+        dadosFiltrados.forEach(item => {
+          const li = document.createElement("li");
+          li.innerText = item;
+          li.addEventListener("mousedown", function(e) {
+            e.preventDefault(); 
+            inputOrigem.value = item;
+            caixaPesquisa.style.display = "none";
+            
+            if(inputOrigem === inputEstado) {
+              buscarCidadesDoEstado(item);
+            }
+          });
+          listaPesquisa.appendChild(li);
+        });
+      }
+      caixaPesquisa.style.display = "flex";
+    }
+
+    inputEstado.addEventListener("focus", function() { exibirCaixaPesquisa(arrayEstados, this.value, this, "Selecione o Estado"); });
+    inputEstado.addEventListener("input", function() { exibirCaixaPesquisa(arrayEstados, this.value, this, "Selecione o Estado"); });
+    inputEstado.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
+
+    inputCidade.addEventListener("focus", function() { if(arrayCidades.length > 0) exibirCaixaPesquisa(arrayCidades, this.value, this, "Selecione a Cidade"); });
+    inputCidade.addEventListener("input", function() { if(arrayCidades.length > 0) exibirCaixaPesquisa(arrayCidades, this.value, this, "Selecione a Cidade"); });
+    inputCidade.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
+
+    inputEstadoCivil.addEventListener("click", function() { exibirCaixaPesquisa(arrayEstadoCivil, "", this, "Selecione o Estado Civil"); });
+    inputEstadoCivil.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
+
+    inputVencimento.addEventListener("click", function() { exibirCaixaPesquisa(arrayVencimento, "", this, "Data de Vencimento"); });
+    inputVencimento.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
+
+    inputPeriodo.addEventListener("click", function() { exibirCaixaPesquisa(arrayPeriodo, "", this, "Período para instalar"); });
+    inputPeriodo.addEventListener("blur", function() { setTimeout(() => { if(inputFocado === this) caixaPesquisa.style.display = "none"; }, 150); });
+
+    // ==========================================
+    // LÓGICA DE SOMA DO PLANO + SMART WI-FI
+    // ==========================================
+    function abrirFormulario(planoCompleto) {
+      // Ex: Divide "300 Megas - R$ 99,90" em "300 Megas" e "99,90"
+      let partes = planoCompleto.split(" - R$ ");
+      nomePlanoBase = partes[0];
+      precoPlanoBase = parseFloat(partes[1].replace(",", "."));
+
+      document.getElementById("toggleSmartWifi").checked = false;
+      atualizarPlanoComSmartWifi();
+      document.getElementById("modalFormulario").classList.add("active");
+    }
+
+    function atualizarPlanoComSmartWifi() {
+      const toggle = document.getElementById("toggleSmartWifi");
+      const inputPlano = document.getElementById("planoSelecionadoInput");
+      const textoPlano = document.getElementById("planoEscolhidoTexto");
+
+      if(toggle.checked) {
+        // Faz a conta matemática adicionando R$ 35.00
+        let precoTotal = precoPlanoBase + 35.00;
+        let precoFormatado = precoTotal.toFixed(2).replace(".", ",");
+        
+        // Atualiza os campos mostrando a soma
+        inputPlano.value = `${nomePlanoBase} + Smart Wi-Fi - R$ ${precoFormatado}`;
+        textoPlano.innerHTML = `Plano selecionado: <strong>${nomePlanoBase} + Smart Wi-Fi (R$ ${precoFormatado})</strong>`;
+      } else {
+        // Mostra o valor normal se o Smart Wi-Fi não estiver marcado
+        let precoFormatado = precoPlanoBase.toFixed(2).replace(".", ",");
+        
+        inputPlano.value = `${nomePlanoBase} - R$ ${precoFormatado}`;
+        textoPlano.innerHTML = `Plano selecionado: <strong>${nomePlanoBase} (R$ ${precoFormatado})</strong>`;
+      }
+    }
+
+    function fecharFormulario() {
+      document.getElementById("modalFormulario").classList.remove("active");
+      caixaPesquisa.style.display = "none"; 
+    }
+
+    // ==========================================
+    // MÁSCARAS E VALIDAÇÕES
+    // ==========================================
+    cep.addEventListener("input", function () {
+      let value = this.value.replace(/\D/g, '');
+      if (value.length > 5) value = value.replace(/^(\d{5})(\d)/, "$1-$2");
+      this.value = value.substring(0, 9);
+    });
+
+    cep.addEventListener("blur", async function () {
+      const cepLimpo = this.value.replace(/\D/g, '');
+      if (cepLimpo.length !== 8) return;
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+        const data = await response.json();
+        if (data.erro) return;
+        endereco.value = `${data.logradouro} - ${data.bairro} - ${data.localidade}/${data.uf}`;
+      } catch (e) {}
+    });
+
+    cpf.addEventListener("input", function () {
+      let value = this.value.replace(/\D/g, '');
+      value = value.replace(/^(\d{3})(\d)/, "$1.$2");
+      value = value.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+      value = value.replace(/\.(\d{3})(\d)/, ".$1-$2");
+      this.value = value.substring(0, 14);
+      this.classList.remove("cpf-valid"); this.classList.remove("cpf-invalid");
+      cpfStatus.className = "status-icon";
+    });
+
+    function validarCPF(cpfValor) {
+      cpfValor = cpfValor.replace(/[^\d]+/g, '');
+      if (cpfValor.length !== 11) return false;
+      if (/^(\d)\1+$/.test(cpfValor)) return false;
+      let soma = 0; let resto;
+      for (let i = 1; i <= 9; i++) soma += parseInt(cpfValor.substring(i - 1, i)) * (11 - i);
+      resto = (soma * 10) % 11;
+      if (resto == 10 || resto == 11) resto = 0;
+      if (resto != parseInt(cpfValor.substring(9, 10))) return false;
+      soma = 0;
+      for (let i = 1; i <= 10; i++) soma += parseInt(cpfValor.substring(i - 1, i)) * (12 - i);
+      resto = (soma * 10) % 11;
+      if (resto == 10 || resto == 11) resto = 0;
+      if (resto != parseInt(cpfValor.substring(10, 11))) return false;
+      return true;
+    }
+
+    cpf.addEventListener("blur", function () {
+      if (this.value === "") return;
+      if (validarCPF(this.value)) {
+        this.classList.remove("cpf-invalid"); this.classList.add("cpf-valid");
+        cpfStatus.className = "status-icon status-success";
+        cpfStatus.innerHTML = `<i class="fa-solid fa-shield-halved"></i>`;
+      } else {
+        this.classList.remove("cpf-valid"); this.classList.add("cpf-invalid");
+        cpfStatus.className = "status-icon status-error";
+        cpfStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+      }
+    });
+
+    rg.addEventListener("input", function () {
+      let value = this.value.toUpperCase().replace(/[^\d0-9X]/g, ''); 
+      value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+      value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})([\dX])/, "$1.$2.$3-$4");
+      this.value = value.substring(0, 12);
+    });
+
+    telefone.addEventListener("input", function () {
+      let value = this.value.replace(/\D/g, '');
+      value = value.replace(/^(\d{2})(\d)/g, "($1) $2");
+      value = value.replace(/(\d)(\d{4})$/, "$1-$2");
+      this.value = value.substring(0, 15);
+    });
+
+    nascimento.addEventListener("input", function () {
+      let value = this.value.replace(/\D/g, '');
+      value = value.replace(/^(\d{2})(\d)/g, "$1/$2");
+      value = value.replace(/^(\d{2})\/(\d{2})(\d)/g, "$1/$2/$3");
+      this.value = value.substring(0, 10);
+    });
+
+    wifi.addEventListener("input", function () {
+      let value = this.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      this.value = value.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
+    });
+
+    senhaWifi.addEventListener("input", function () {
+      let value = this.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      this.value = value.replace(/\s+/g, "").replace(/[^a-zA-Z0-9]/g, "");
+      const restante = 8 - this.value.length;
+      if (restante > 0) {
+        contadorSenha.innerHTML = `${restante} restantes`;
+        senhaStatus.innerHTML = `<i class="fa-solid fa-circle-xmark senha-erro"></i>`;
+        this.style.borderColor = "#ff4d5d";
+      } else {
+        contadorSenha.innerHTML = `Senha forte`;
+        senhaStatus.innerHTML = `<i class="fa-solid fa-circle-check senha-ok"></i>`;
+        this.style.borderColor = "#00ff99";
+      }
+    });
+
+    // ==========================================
+    // ANIMAÇÃO E ENVIO DE DADOS (ZAP)
+    // ==========================================
+    function iniciarAnimacaoTecnologica() {
+      const modal = document.getElementById("successModal");
+      modal.classList.add("active");
+      document.getElementById("btnEnviarWhatsApp").style.display = "none";
+      document.getElementById("loadingBar").style.display = "block";
+
+      const texto = `Esqueça tudo o que você já viu sobre internet.\n\nSua conexão começa agora.`;
+      const typed = document.getElementById("typedText");
+      typed.innerHTML = "";
+      
+      let i = 0; const velocidade = 55;
+      function escrever() {
+        if (i < texto.length) {
+          typed.innerHTML += texto.charAt(i) === "\n" ? "<br>" : texto.charAt(i);
+          i++; setTimeout(escrever, velocidade);
+        }
+      }
+      escrever();
+    }
+
+    cadastroForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!validarCPF(cpf.value)) { alert("CPF inválido."); cpf.focus(); return; }
+      if (senhaWifi.value.length < 8) { alert("A senha deve ter mín 8 caracteres."); senhaWifi.focus(); return; }
+
+      const planoFinalText = document.getElementById("planoSelecionadoInput").value;
+
+      const dados = `
 📡 *NOVO CADASTRO DE INSTALAÇÃO*
 
 🔥 *PLANO ESCOLHIDO*
-Giga Plus - R$ 129,90
+${planoFinalText}
 
 📍 *ENDEREÇO*
-CEP: 13322-224
-Rua/Bairro: Rua Eviner Gonzaga - Loteamento Jardim das Constelações - Salto/SP
-Nº: 90 / Comp: BL1 AP34
+CEP: ${cep.value}
+Rua/Bairro: ${endereco.value}
+Nº: ${numero.value} / Comp: ${complemento.value}
 
 👤 *DADOS PESSOAIS*
-Nome: Guilherme Ortiz Marques 
-CPF: 398.927.978-50
-RG: 47.915.423-5
-Nascimento: 12/11/1991
-Naturalidade: Indaiatuba / SP - São Paulo
-Estado Civil: Casado(a)
-Pai: Valter 
-Mãe: Eunice 
+Nome: ${nome.value}
+CPF: ${cpf.value}
+RG: ${rg.value}
+Nascimento: ${nascimento.value}
+Naturalidade: ${inputCidade.value} / ${inputEstado.value}
+Estado Civil: ${estadoCivil.value}
+Pai: ${nomePai.value}
+Mãe: ${nomeMae.value}
 
 📞 *CONTATO*
-Celular: (19) 99300-4628
-Email: gmarxsant@gmail.com
+Celular: ${telefone.value}
+Email: ${email.value}
 
 ⚙️ *INSTALAÇÃO E PAGAMENTO*
-Vencimento: Dia 15
-Período de Instalação: Manhã
+Vencimento: ${vencimento.value}
+Período de Instalação: ${periodo.value}
 
 📶 *DADOS DA REDE*
-Wi-Fi: Guina
-Senha: Guina123
-      
+Wi-Fi: ${wifi.value}
+Senha: ${senhaWifi.value}
+      `;
+
+      linkWhatsAppGlobal = `https://wa.me/5519993004628?text=${encodeURIComponent(dados)}`;
+      fecharFormulario();
+      iniciarAnimacaoTecnologica();
+
+      setTimeout(() => {
+        document.getElementById("btnEnviarWhatsApp").style.display = "inline-flex";
+      }, 5000);
+    });
+
+    document.getElementById("btnEnviarWhatsApp").addEventListener("click", function() {
+       window.open(linkWhatsAppGlobal, "_blank");
+    });
+  </script>
+</body>
+</html>
